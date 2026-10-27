@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Raghuraman Portfolio</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: floating pill nav, centred hero with a product shot, 2-column project grid, case studies open as a full-page panel via #project-<id>. */
+:root{
+  --bg:#f5f2ee;
+  --surface:#ffffff;
+  --soft:#ece7e0;
+  --ink:#16140f;
+  --muted:#6a645b;
+  --line:#e2dcd3;
+  --accent:#4a3fd8;
+  --on-ink:#f5f2ee;
+  --font-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --font-body:'Instrument Sans','Segoe UI',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121110;--surface:#1b1a18;--soft:#242220;--ink:#f3efe9;--muted:#a59e93;--line:#2d2a27;--accent:#9a93ff;--on-ink:#121110;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121110;--surface:#1b1a18;--soft:#242220;--ink:#f3efe9;--muted:#a59e93;--line:#2d2a27;--accent:#9a93ff;--on-ink:#121110;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--font-body);font-size:16px;line-height:1.6;
+  padding-block:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-font-smoothing:antialiased;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+a{color:inherit}
+h1,h2,h3{font-family:var(--font-display);margin:0;text-wrap:balance;letter-spacing:-0.02em;line-height:1.1}
+p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto}
+.eyebrow{font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:600;font-size:.95rem;padding:12px 22px;border-radius:999px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:transform .15s ease,background .15s ease}
+.btn-dark{background:var(--ink);color:var(--on-ink)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn:hover{transform:translateY(-1px)}
+.btn-ghost:hover{background:var(--soft)}
+
+/* Header */
+.site{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:40;margin:12px auto 0;max-width:1120px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 8px 8px 22px}
+.brand{font-family:var(--font-display);font-weight:700;letter-spacing:-0.01em;text-decoration:none}
+.links{display:flex;gap:28px}
+.links a{font-size:.74rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--muted)}
+.links a:hover{color:var(--ink)}
+.bar-right{display:flex;align-items:center;gap:8px}
+.bar .btn{padding:9px 18px;font-size:.85rem}
+.menu-btn{display:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;align-items:center;justify-content:center}
+@media (max-width:820px){
+  .menu-btn{display:inline-flex}
+  .links{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;flex-direction:column;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:8px}
+  .links.open{display:flex}
+  .links a{padding:14px 16px;font-size:.8rem}
+}
+
+/* Hero */
+.hero{padding-block:clamp(56px,9vw,96px) 0;text-align:center}
+.hero h1{font-size:clamp(2.5rem,7.4vw,4.9rem);font-weight:700;letter-spacing:-0.035em;max-width:13ch;margin:0 auto}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p.lede{max-width:56ch;margin:24px auto 0;color:var(--muted);font-size:1.075rem}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:32px}
+.shot{max-width:800px;margin:clamp(40px,6vw,64px) auto 0;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#e6ecfb;aspect-ratio:380/262}
+.shot svg{display:block;width:100%;height:100%}
+
+/* Sections */
+section{padding-block:clamp(56px,9vw,104px) 0}
+.head{text-align:center;max-width:620px;margin:0 auto clamp(32px,5vw,52px)}
+.head h2{font-size:clamp(1.9rem,4.6vw,2.9rem);font-weight:700}
+.head p{margin-top:14px;color:var(--muted)}
+
+/* About */
+.about{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,5vw,64px);align-items:stretch}
+.about h2{font-size:clamp(1.9rem,4.6vw,2.9rem);font-weight:700;margin-bottom:18px}
+.about .copy{min-width:0}
+.about .copy>p{color:var(--muted);font-size:1.05rem;max-width:52ch}
+.group{margin-top:28px}
+.group h3{font-family:var(--font-body);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:6px 14px;border-radius:999px;background:var(--soft);font-size:.88rem;font-weight:500}
+.mono{min-width:0;min-height:260px;border-radius:24px;background:var(--soft);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;padding:24px}
+.mono .big{font-family:var(--font-display);font-weight:800;font-size:clamp(5rem,14vw,8.5rem);line-height:.9;letter-spacing:-0.05em}
+.mono .big span{color:var(--accent)}
+.mono small{color:var(--muted);font-size:.9rem}
+@media (max-width:760px){.about{grid-template-columns:1fr}}
+
+/* Projects */
+.filters{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:28px}
+.filters button{font:inherit;font-size:.88rem;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+@media (max-width:720px){.grid{grid-template-columns:1fr}}
+.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden;text-decoration:none;transition:transform .2s ease,box-shadow .2s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 18px 40px -22px rgba(20,16,10,.35)}
+.card .thumb{aspect-ratio:4/3;background:var(--soft)}
+.card .thumb svg{display:block;width:100%;height:100%}
+.card .body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
+.card h3{font-size:1.4rem;font-weight:700}
+.card p{color:var(--muted);font-size:.96rem}
+.card .go{margin-top:auto;padding-top:10px;font-weight:600;font-size:.92rem;display:inline-flex;gap:6px;align-items:center}
+.card[hidden]{display:none}
+
+/* Services */
+.svc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+@media (max-width:820px){.svc{grid-template-columns:1fr}}
+.svc article{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:28px}
+.ico{width:48px;height:48px;border-radius:14px;background:var(--soft);display:grid;place-items:center;color:var(--accent);margin-bottom:20px}
+.svc h3{font-size:1.3rem;margin-bottom:10px;font-weight:700}
+.svc p{color:var(--muted)}
+
+/* Testimonials */
+.quotes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+@media (max-width:900px){.quotes{grid-template-columns:1fr}}
+.quote{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:28px;display:flex;flex-direction:column;gap:20px}
+.quote .mark{font-family:var(--font-display);font-weight:800;font-size:3.4rem;line-height:.6;color:var(--accent)}
+.quote blockquote{margin:0;font-family:var(--font-display);font-size:1.2rem;font-weight:600;line-height:1.35;letter-spacing:-0.01em}
+.quote footer{margin-top:auto;display:flex;flex-direction:column}
+.quote footer b{font-size:.95rem}
+.quote footer span{color:var(--muted);font-size:.88rem}
+
+/* Contact */
+.contact{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(24px,5vw,64px);align-items:start}
+@media (max-width:820px){.contact{grid-template-columns:1fr}}
+.contact h2{font-size:clamp(1.9rem,4.6vw,2.9rem);font-weight:700;margin-bottom:16px}
+.contact .info>p{color:var(--muted);max-width:44ch}
+.mail{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:24px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.mail code{font-family:var(--font-body);font-weight:600;user-select:all;overflow-wrap:anywhere}
+.mail button{margin-left:auto}
+.social{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.social a{padding:8px 16px;border-radius:999px;border:1px solid var(--line);text-decoration:none;font-weight:500;font-size:.9rem}
+.social a:hover{background:var(--soft)}
+form{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,3vw,28px);display:grid;gap:16px;min-width:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+label{display:grid;gap:6px;font-size:.85rem;font-weight:600;min-width:0}
+input,select,textarea{font:inherit;font-weight:400;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;min-width:0}
+textarea{min-height:120px;resize:vertical}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.8}
+.ready{background:var(--soft);border-radius:16px;padding:16px;display:grid;gap:12px}
+.ready p{font-size:.92rem;color:var(--muted)}
+.ready textarea{min-height:130px;font-size:.9rem}
+.err{color:#c0392b;font-size:.85rem;min-height:1em}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .err{color:#ff8a7a}}
+:root[data-theme="dark"] .err{color:#ff8a7a}
+
+/* Footer */
+footer.site-foot{margin-top:clamp(64px,10vw,112px);border-top:1px solid var(--line);padding-block:48px 40px;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;max-width:1120px;margin-inline:auto}
+@media (max-width:720px){footer.site-foot{grid-template-columns:1fr}}
+.foot-brand{font-family:var(--font-display);font-weight:800;font-size:clamp(1.8rem,5vw,2.4rem);letter-spacing:-0.03em}
+.site-foot p{color:var(--muted);font-size:.9rem;margin-top:8px}
+.site-foot ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.site-foot a{text-decoration:none;color:var(--muted);font-size:.92rem}
+.site-foot a:hover{color:var(--ink)}
+
+/* Case study panel */
+.case{position:fixed;inset:0;z-index:55;background:var(--bg);overflow-y:auto;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.case-in{max-width:880px;margin:0 auto;padding-block:20px 72px}
+.case-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px}
+.case h1{font-size:clamp(2.1rem,6vw,3.6rem);font-weight:700;letter-spacing:-0.03em;margin:10px 0 14px}
+.case .lead{color:var(--muted);font-size:1.1rem;max-width:60ch}
+.case .cover{margin-top:28px;border-radius:22px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3;max-height:560px;background:var(--soft)}
+.case .cover svg{display:block;width:100%;height:100%}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:28px 0 8px;padding-block:20px;border-block:1px solid var(--line)}
+@media (max-width:560px){.meta{grid-template-columns:1fr}}
+.meta dt{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.meta dd{margin:4px 0 0;font-weight:600}
+.blocks{display:grid;gap:36px;margin-top:36px}
+.blocks h2{font-size:1.5rem;font-weight:700;margin-bottom:10px}
+.blocks p,.blocks li{color:var(--muted);max-width:64ch}
+.blocks ul{margin:0;padding-left:1.15em;display:grid;gap:8px}
+.note{font-size:.85rem;color:var(--muted);padding:12px 16px;background:var(--soft);border-radius:12px;margin-top:36px}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:40px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="site" id="top">
+  <div class="bar">
+    <a class="brand" href="#top">Raghuraman</a>
+    <nav class="links" id="links" aria-label="Main">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#services">Services</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="bar-right">
+      <a class="btn btn-dark" href="#contact">Hire Me</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="links">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h12M3 9h12M3 13h12"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Designing Digital Experiences That People <em>Love.</em></h1>
+      <p class="lede">Hi, I'm Raghuraman. A passionate UI/UX Designer dedicated to crafting intuitive, beautiful, and highly functional digital products that drive business growth and delight users.</p>
+      <div class="cta">
+        <a class="btn btn-dark" href="#projects">View My Work</a>
+        <a class="btn btn-ghost" href="#contact">Start a Project</a>
+      </div>
+      <div class="shot" id="heroShot"></div>
+    </div>
+
+    <section id="about">
+      <div class="about">
+        <div class="copy">
+          <p class="eyebrow">About me</p>
+          <h2 style="margin-top:10px">Ideas into simple, useful products.</h2>
+          <p>I'm a creative UI/UX Designer passionate about transforming ideas into simple, useful and visually engaging digital products.</p>
+          <div class="group">
+            <h3>Focus areas</h3>
+            <div class="chips"><span class="chip">UI/UX</span><span class="chip">Website Design</span><span class="chip">Mobile Apps</span><span class="chip">Design Systems</span></div>
+          </div>
+          <div class="group">
+            <h3>Skills &amp; tools</h3>
+            <div class="chips"><span class="chip">Figma</span><span class="chip">Framer</span><span class="chip">Canva</span><span class="chip">HTML/CSS</span><span class="chip">JavaScript</span><span class="chip">Stitch</span></div>
+          </div>
+        </div>
+        <div class="mono" aria-hidden="true">
+          <div class="big">R<span>.</span></div>
+          <small>UI/UX Designer<br>Available for new projects</small>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="head">
+        <p class="eyebrow">Selected work</p>
+        <h2 style="margin-top:10px">Projects</h2>
+        <p>A collection of recent projects showcasing my process and design solutions.</p>
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="Filter projects">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="web" aria-pressed="false">Websites</button>
+        <button type="button" data-f="product" aria-pressed="false">Web products</button>
+        <button type="button" data-f="mobile" aria-pressed="false">Mobile apps</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section id="services">
+      <div class="head">
+        <p class="eyebrow">Services</p>
+        <h2 style="margin-top:10px">What I can design</h2>
+        <p>Transforming complex problems into elegant design solutions across platforms.</p>
+      </div>
+      <div class="svc">
+        <article>
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M9 9v11"/></svg></div>
+          <h3>UI/UX Design</h3>
+          <p>End to end product design focusing on user needs and business goals.</p>
+        </article>
+        <article>
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
+          <h3>Mobile App Design</h3>
+          <p>Intuitive and engaging native experiences for iOS and Android.</p>
+        </article>
+        <article>
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg></div>
+          <h3>Design Systems</h3>
+          <p>Scalable and consistent component libraries for growing products.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="testimonials">
+      <div class="head">
+        <p class="eyebrow">Testimonials</p>
+        <h2 style="margin-top:10px">What clients say</h2>
+        <p>Feedback from partners and clients I've had the pleasure of working with.</p>
+      </div>
+      <div class="quotes">
+        <figure class="quote" style="margin:0">
+          <span class="mark" aria-hidden="true">&ldquo;</span>
+          <blockquote>Raghuraman's attention to detail and user-centric approach transformed our product's engagement metrics.</blockquote>
+          <footer><b>Sarah J.</b><span>Startup Founder</span></footer>
+        </figure>
+        <figure class="quote" style="margin:0">
+          <span class="mark" aria-hidden="true">&ldquo;</span>
+          <blockquote>A truly professional designer who understands how to balance aesthetics with business goals perfectly.</blockquote>
+          <footer><b>Michael R.</b><span>Product Manager</span></footer>
+        </figure>
+        <figure class="quote" style="margin:0">
+          <span class="mark" aria-hidden="true">&ldquo;</span>
+          <blockquote>The design system created for us has significantly sped up our development cycle and improved consistency.</blockquote>
+          <footer><b>Elena K.</b><span>Lead Developer</span></footer>
+        </figure>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <div class="info">
+          <p class="eyebrow">Contact</p>
+          <h2 style="margin-top:10px">Let's work together</h2>
+          <p>Have a project in mind? Fill out the form or reach out directly via my social links. I'm currently available for new opportunities.</p>
+          <div class="mail">
+            <code id="mailText">hello@raghuraman.com</code>
+            <button class="btn btn-ghost" type="button" id="copyMail" style="padding:8px 16px;font-size:.85rem">Copy email</button>
+          </div>
+          <div class="social">
+            <a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.behance.net" target="_blank" rel="noopener">Behance</a>
+            <a href="https://dribbble.com" target="_blank" rel="noopener">Dribbble</a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
+          </div>
+        </div>
+        <form id="form" novalidate>
+          <div class="row">
+            <label for="f-name">Name<input id="f-name" name="name" type="text" placeholder="John Doe" autocomplete="name"></label>
+            <label for="f-email">Email<input id="f-email" name="email" type="email" placeholder="john@example.com" autocomplete="email"></label>
+          </div>
+          <div class="row">
+            <label for="f-type">Project type
+              <select id="f-type" name="type">
+                <option>Website Design</option><option>Mobile App Design</option><option>Web App / Dashboard</option><option>Design System</option><option>Something else</option>
+              </select>
+            </label>
+            <label for="f-budget">Budget
+              <select id="f-budget" name="budget">
+                <option>Under ₹10,000</option><option>₹10,000 – ₹25,000</option><option>₹25,000 – ₹50,000</option><option>₹50,000+</option><option>Not sure yet</option>
+              </select>
+            </label>
+          </div>
+          <label for="f-msg">Message<textarea id="f-msg" name="message" placeholder="Tell me about your project..."></textarea></label>
+          <div class="err" id="err" role="alert"></div>
+          <button class="btn btn-dark" type="submit" id="send">Send Message</button>
+          <div class="ready" id="ready" hidden>
+            <p>Your message is ready. Copy it and send it to <b>hello@raghuraman.com</b>.</p>
+            <textarea id="readyText" readonly aria-label="Your message"></textarea>
+            <button class="btn btn-ghost" type="button" id="copyMsg">Copy message</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-foot">
+    <div>
+      <div class="foot-brand">RAGHURAMAN</div>
+      <p>&copy; 2026 Raghuraman. All rights reserved.<br>Designed for excellence.</p>
+    </div>
+    <ul>
+      <li><a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://dribbble.com" target="_blank" rel="noopener">Dribbble</a></li>
+      <li><a href="https://www.behance.net" target="_blank" rel="noopener">Behance</a></li>
+      <li><a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a></li>
+    </ul>
+    <ul>
+      <li><a href="#top">Back to top</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </footer>
+</main>
+
+<div class="case" id="case" role="dialog" aria-modal="true" aria-labelledby="caseTitle" hidden>
+  <div class="case-in" id="caseIn"></div>
+</div>
+
+<script>
+(function(){
+  /* ---------- tiny SVG helpers ---------- */
+  var R=function(x,y,w,h,r,f,o){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+r+'" fill="'+f+'"'+(o!=null?' opacity="'+o+'"':'')+'/>';};
+  var C=function(x,y,r,f,o){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+f+'"'+(o!=null?' opacity="'+o+'"':'')+'/>';};
+  var S=function(b,vb){return '<svg viewBox="'+(vb||'0 0 400 300')+'" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">'+b+'</svg>';};
+  var win=function(x,y,w,h,fill,bar){return R(x,y,w,h,10,fill)+R(x,y,w,20,10,bar)+R(x,y+10,w,10,0,bar)+C(x+14,y+10,3,'#ff6b6b')+C(x+24,y+10,3,'#ffd43b')+C(x+34,y+10,3,'#51cf66');};
+  var ph=function(x,y,w,h){return R(x,y,w,h,22,'#1a1713')+R(x+4,y+4,w-8,h-8,18,'#fff')+R(x+w/2-14,y+8,28,5,2.5,'#1a1713');};
+
+  /* ---------- project illustrations (original UI sketches) ---------- */
+  var ART={
+    hr:function(vb){
+      var b=R(0,0,400,300,0,'#e6ecfb')+win(28,34,344,240,'#fff','#eef1fa')+R(34,60,52,204,8,'#f6f8fd')+R(42,70,36,8,4,'#3b5bdb');
+      [88,104,120,136,152].forEach(function(y,i){b+=R(42,y,[28,34,24,30,22][i],6,3,'#c9d1ea');});
+      [100,188,276].forEach(function(x,i){b+=R(x,66,80,44,8,'#f3f5fc')+R(x+8,74,28,5,2.5,'#9aa7d6')+R(x+8,86,[44,36,40][i],12,3,i===1?'#3b5bdb':'#1f2a5a');});
+      b+=R(100,120,150,84,8,'#f3f5fc');
+      [30,44,36,58,48,66,54].forEach(function(h,i){b+=R(110+i*19,196-h,11,h,3,i===5?'#3b5bdb':'#c3ceee');});
+      b+=R(258,120,98,84,8,'#f3f5fc')+'<circle cx="307" cy="162" r="22" fill="none" stroke="#dfe5f7" stroke-width="10"/><circle cx="307" cy="162" r="22" fill="none" stroke="#3b5bdb" stroke-width="10" stroke-dasharray="88 50" transform="rotate(-90 307 162)"/>';
+      b+=R(100,212,256,52,8,'#f3f5fc');
+      [222,236,250].forEach(function(y){b+=C(114,y,4.5,'#9aa7d6')+R(124,y-2.5,56,5,2.5,'#c9d1ea')+R(220,y-2.5,34,5,2.5,'#c9d1ea')+R(312,y-4,34,8,4,'#d3f0dc');});
+      return S(b,vb);
+    },
+    market:function(){
+      var b=R(0,0,400,300,0,'#dce8ff')+win(28,34,344,240,'#fff','#eef1fa')+R(28,54,344,28,0,'#2d6cdf')+R(40,64,36,8,4,'#fff',.9)+R(88,61,170,14,7,'#fff')+R(272,64,24,8,4,'#fff',.7)+R(304,64,24,8,4,'#fff',.7)+C(352,68,6,'#ffd23f');
+      var pc=['#ffd9d9','#d9ecff','#fff0c2','#dff5e1','#ead9ff','#ffe1c2'];
+      pc.forEach(function(c,i){var x=62+i*55;b+=C(x,102,10,c)+R(x-13,118,26,4,2,'#c9d1ea');});
+      b+=R(40,130,320,50,10,'#ffd23f')+R(54,140,100,9,4,'#1b2559')+R(54,155,70,6,3,'#1b2559',.55)+R(54,166,46,10,5,'#1b2559')+R(286,138,56,34,6,'#fff',.85)+C(314,155,10,'#2d6cdf');
+      var p2=['#ffe1c2','#d9ecff','#dff5e1','#ead9ff'];
+      p2.forEach(function(c,i){var x=40+i*80;b+=R(x,190,72,76,8,'#f5f7fc')+R(x+6,196,60,38,6,c)+R(x+6,240,48,5,2.5,'#c9d1ea')+R(x+6,251,28,7,3.5,'#2d6cdf');});
+      return S(b);
+    },
+    resto:function(){
+      var b=R(0,0,400,300,0,'#17352a')+win(28,34,344,240,'#faf5ea','#efe7d5')+R(40,62,40,7,3.5,'#17352a')+R(200,63,28,5,2.5,'#bdb39c')+R(236,63,28,5,2.5,'#bdb39c')+R(272,63,28,5,2.5,'#bdb39c')+R(312,58,48,14,7,'#c8553d');
+      b+=R(40,98,130,13,6,'#17352a')+R(40,118,100,13,6,'#17352a')+R(40,142,120,5,2.5,'#bdb39c')+R(40,152,96,5,2.5,'#bdb39c')+R(40,170,66,16,8,'#c8553d')+R(114,170,54,16,8,'#e6dcc4');
+      b+=C(290,130,66,'#efe4cb')+C(290,130,50,'#fff')+C(290,130,36,'#ece0c4')+C(280,122,13,'#c8553d')+C(302,136,11,'#6b8f4e')+C(288,144,9,'#e3b04b')+C(304,118,7,'#6b8f4e');
+      ['#c8553d','#6b8f4e','#e3b04b'].forEach(function(c,i){var x=40+i*110;b+=R(x,208,100,56,8,'#f1e9d6')+C(x+16,224,7,c)+R(x+30,220,50,5,2.5,'#17352a')+R(x+30,230,36,4,2,'#bdb39c')+R(x+10,244,78,4,2,'#cfc5ad')+R(x+10,252,60,4,2,'#cfc5ad');});
+      return S(b);
+    },
+    shop:function(){
+      var b=R(0,0,400,300,0,'#fbe3d9')+win(28,34,344,240,'#fff','#f6ece8')+R(40,62,30,7,3.5,'#15130f')+R(150,63,30,5,2.5,'#cfc4bf')+R(190,63,30,5,2.5,'#cfc4bf')+R(230,63,30,5,2.5,'#cfc4bf')+C(346,66,7,'#15130f');
+      b+=R(44,86,150,172,12,'#f6dccf')+R(76,132,86,86,10,'#e8613c')+'<path d="M98 132 q21 -34 42 0" fill="none" stroke="#15130f" stroke-width="5" stroke-linecap="round"/>'+R(76,160,86,10,0,'#15130f',.15);
+      b+=R(212,92,90,8,4,'#cfc4bf')+R(212,108,120,12,5,'#15130f')+R(212,126,90,12,5,'#15130f')+R(212,148,60,6,3,'#f0b429')+R(212,164,50,14,5,'#e8613c');
+      for(var i=0;i<4;i++){b+=R(212+i*34,190,28,18,9,i===1?'#15130f':'#f1e4de');}
+      b+=C(220,226,6,'#e8613c')+C(238,226,6,'#15130f')+C(256,226,6,'#7aa6a1')+R(212,238,128,22,11,'#15130f');
+      return S(b);
+    },
+    food:function(){
+      var b=R(0,0,400,300,0,'#ffe6d0')+C(70,60,50,'#ffd2ad',.6)+C(350,250,60,'#ffd2ad',.5);
+      b+=ph(76,22,116,262)+R(90,40,50,6,3,'#fc8019')+R(90,50,70,5,2.5,'#d8d2ca')+R(90,64,88,16,8,'#f4efe9');
+      ['#ffd9b8','#ffe9a8','#d8f0cf','#f6d0d0'].forEach(function(c,i){b+=C(100+i*22,96,8,c);});
+      b+=R(90,114,88,56,10,'#ffd2ad')+C(150,142,16,'#fc8019',.85)+R(90,176,56,5,2.5,'#2b2620')+R(90,186,38,4,2,'#bbb3a8');
+      b+=R(90,200,88,56,10,'#d8f0cf')+C(118,228,16,'#3d9a50',.8)+R(90,262,56,5,2.5,'#2b2620');
+      b+=ph(212,40,116,244)+R(220,58,100,70,12,'#fc8019')+C(300,80,20,'#ffb36b',.7)+R(222,138,70,8,4,'#2b2620')+R(222,152,48,5,2.5,'#bbb3a8')+R(222,164,34,12,6,'#e8f5e9');
+      [188,214,240].forEach(function(y){b+=R(222,y,26,26,6,'#ffd2ad')+R(254,y+4,44,5,2.5,'#2b2620')+R(254,y+14,30,4,2,'#bbb3a8')+R(302,y+6,20,12,6,'#fc8019');});
+      return S(b);
+    },
+    astro:function(){
+      var b='<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1a6e"/><stop offset="1" stop-color="#0f0a2e"/></linearGradient></defs>'+R(0,0,400,300,0,'url(#ag)');
+      [[30,30],[80,70],[56,150],[120,40],[340,40],[370,120],[300,210],[350,270],[40,260],[110,230],[290,30],[380,200]].forEach(function(p,i){b+=C(p[0],p[1],i%3===0?2:1.2,i%2?'#fff':'#e7c25a',.8);});
+      b+=R(142,16,116,268,22,'#0a0620')+R(146,20,108,260,18,'#1d1250');
+      b+='<circle cx="200" cy="100" r="40" fill="none" stroke="#e7c25a" stroke-width="1.2"/><circle cx="200" cy="100" r="30" fill="none" stroke="#e7c25a" stroke-width="1" opacity=".6"/><circle cx="200" cy="100" r="18" fill="none" stroke="#e7c25a" stroke-width="1" opacity=".6"/>';
+      for(var i=0;i<12;i++){var a=i*Math.PI/6;b+=C((200+40*Math.cos(a)).toFixed(1),(100+40*Math.sin(a)).toFixed(1),2.4,'#e7c25a');}
+      b+=C(200,100,5,'#e7c25a')+R(166,158,68,7,3.5,'#f4e9c8')+R(176,171,48,5,2.5,'#8d83c4');
+      b+=R(158,190,84,30,10,'#2b1d6b')+C(172,205,7,'#e7c25a')+R(186,199,40,5,2.5,'#f4e9c8')+R(186,209,28,4,2,'#8d83c4');
+      b+=R(158,226,84,30,10,'#2b1d6b')+C(172,241,7,'#7a63e6')+R(186,235,40,5,2.5,'#f4e9c8')+R(186,245,28,4,2,'#8d83c4');
+      b+=C(64,214,22,'#7a63e6')+'<ellipse cx="64" cy="214" rx="38" ry="9" fill="none" stroke="#e7c25a" stroke-width="2" transform="rotate(-18 64 214)"/>'+C(338,80,16,'#e7c25a',.9);
+      return S(b);
+    },
+    network:function(){
+      var b=R(0,0,400,300,0,'#dbe8f6')+R(196,52,148,190,14,'#fff')+R(196,52,148,44,14,'#9cc3e8')+R(196,76,148,20,0,'#9cc3e8')+C(270,100,20,'#fff')+C(270,100,16,'#2f6fb5')+R(232,130,76,8,4,'#1f2a37')+R(244,146,52,5,2.5,'#9aa7b5')+R(212,164,50,5,2.5,'#c9d4df')+R(270,164,50,5,2.5,'#c9d4df')+R(222,184,96,18,9,'#2f6fb5')+R(222,208,96,16,8,'#e8f0f9');
+      b+=ph(74,28,120,256)+C(100,58,9,'#2f6fb5')+R(114,52,66,12,6,'#eef3f8');
+      [[74,'#9cc3e8'],[166,'#7fb0dd']].forEach(function(p){var y=p[0];b+=R(88,y,92,82,10,'#f4f8fc')+C(100,y+14,7,p[1])+R(112,y+10,48,5,2.5,'#1f2a37')+R(112,y+19,30,4,2,'#9aa7b5')+R(94,y+32,80,4,2,'#c9d4df')+R(94,y+40,64,4,2,'#c9d4df')+R(94,y+50,80,26,6,'#cfe1f3');});
+      b+=R(88,258,92,16,8,'#eef3f8')+C(108,266,3,'#9aa7b5')+C(134,266,3,'#2f6fb5')+C(160,266,3,'#9aa7b5');
+      return S(b);
+    },
+    folio:function(){
+      var b=R(0,0,400,300,0,'#d9d3ff')+win(28,34,344,240,'#0f0e13','#1b1a22')+R(40,62,34,6,3,'#fff')+R(230,63,22,4,2,'#6d6a7a')+R(262,63,22,4,2,'#6d6a7a')+R(294,63,22,4,2,'#6d6a7a')+R(324,58,36,14,7,'#fff');
+      b+=R(40,96,200,22,6,'#f4f2ff')+R(40,126,150,22,6,'#f4f2ff')+R(40,156,100,22,6,'#7b6cff')+R(40,194,110,4,2,'#6d6a7a')+R(40,203,90,4,2,'#6d6a7a');
+      b+=R(262,92,98,64,10,'#7b6cff')+C(311,124,16,'#fff',.25)+R(262,164,46,46,10,'#2a2833')+R(314,164,46,46,10,'#f4f2ff');
+      b+=R(40,228,320,32,8,'#1b1a22');
+      for(var i=0;i<5;i++){b+=R(48+i*60,238,48,12,6,'#2a2833');}
+      return S(b);
+    }
+  };
+
+  /* ---------- project content ---------- */
+  var BRAND='This is an independent concept project made for my portfolio. It is not affiliated with, endorsed by, or commissioned by the company.';
+  var P=[
+    {id:'hr-platform',art:'hr',f:'product',cat:'Web App UI/UX',title:'HR Platform',
+     blurb:'One workspace for hiring, attendance, leave and payroll, built for HR teams that juggle too many tools.',
+     type:'Product design',tools:'Figma',role:'UI/UX Designer',
+     overview:'A web-based HR platform where HR managers and employees handle everyday people work in one place: hiring, attendance, leave requests and payroll.',
+     challenge:'HR teams often move between spreadsheets, email threads and separate tools. Information gets scattered, and simple approvals take longer than they should.',
+     approach:['Mapped the daily journeys of HR managers and employees to find where work stalled.','Grouped features into clear modules with a persistent sidebar and a dashboard that shows what needs attention first.','Built reusable tables, filters, status pills and forms so every module feels consistent.'],
+     deliver:['User flows','Wireframes','High-fidelity screens','Clickable prototype','Component library']},
+    {id:'flipkart-website-design',art:'market',f:'web',cat:'Website / Marketplace UX',title:'Flipkart Website Design',
+     blurb:'A cleaner marketplace homepage and browsing flow focused on faster discovery and a calmer checkout.',
+     type:'Concept redesign',tools:'Figma',role:'UI/UX Designer',brand:true,
+     overview:'A redesign concept for a large online marketplace website, covering the homepage, product listing, product page and checkout.',
+     challenge:'Marketplaces carry thousands of products, offers and banners. Pages become crowded, and shoppers have to work to find what they came for.',
+     approach:['Simplified the header and search, and added clear category shortcuts.','Rebuilt product cards so price, rating and delivery details are easy to compare.','Shortened the product page and cart so people reach checkout with fewer steps.'],
+     deliver:['Homepage','Category listing','Product page','Cart and checkout','Responsive layouts']},
+    {id:'restaurant-website',art:'resto',f:'web',cat:'Website Design',title:'Restaurant Website',
+     blurb:'A warm, appetising website with the menu, table booking and location all within one tap.',
+     type:'Website design',tools:'Figma, Framer',role:'UI/UX Designer',
+     overview:'A website for a restaurant that wants guests to see the food, book a table and find the place without hunting through pages.',
+     challenge:'Many restaurant sites hide the menu in a PDF and make booking awkward on a phone, which is where most guests look first.',
+     approach:['Made the menu the centrepiece, with photos, prices and dietary tags.','Reduced table booking to a few simple fields.','Kept opening hours, address and phone visible on every screen size.'],
+     deliver:['Homepage','Menu pages','Reservation flow','About and contact','Mobile layouts']},
+    {id:'ecommerce-website',art:'shop',f:'web',cat:'Website / E-commerce UX',title:'E-commerce Website',
+     blurb:'Optimizing conversion rates through intuitive navigation and clear checkout flows.',
+     type:'Website design',tools:'Figma',role:'UI/UX Designer',
+     overview:'An online store design focused on helping shoppers decide quickly and finish their order without friction.',
+     challenge:'Stores lose shoppers when navigation is confusing, product pages are cluttered, or checkout asks for too much at once.',
+     approach:['Structured navigation around how people shop, with clear categories and filters.','Designed product pages with large imagery, clear options and an obvious add to cart.','Simplified checkout into short steps with visible progress.'],
+     deliver:['Homepage','Product listing','Product page','Checkout flow','Responsive layouts']},
+    {id:'swiggy-app-redesign',art:'food',f:'mobile',cat:'Mobile App UI/UX',title:'Swiggy App Redesign',
+     blurb:'A complete visual and functional overhaul of the popular food delivery app.',
+     type:'Concept redesign',tools:'Figma',role:'UI/UX Designer',brand:true,
+     overview:'A visual and functional overhaul of a food delivery app, from discovery through ordering and tracking.',
+     challenge:'Food delivery apps pack in offers, restaurants and categories. Finding a good meal quickly can feel like scrolling through noise.',
+     approach:['Reorganised the home screen around what people want to do first: search, reorder and browse by craving.','Gave restaurant pages a clearer hierarchy for ratings, delivery time and popular dishes.','Applied a consistent colour and component system across every screen.'],
+     deliver:['Home and search','Restaurant page','Cart and payment','Order tracking','UI kit']},
+    {id:'align27',art:'astro',f:'mobile',cat:'Astrology Mobile App',title:'Align27',
+     blurb:'Designing an intuitive and mystical user experience for astrology enthusiasts.',
+     type:'Mobile app design',tools:'Figma',role:'UI/UX Designer',
+     overview:'A mobile app for astrology enthusiasts, built around a daily reading and a personal birth chart.',
+     challenge:'Astrology content is dense and symbolic. The app needed to feel mystical without becoming hard to read or hard to use.',
+     approach:['Used deep colours and fine gold line art to set a mystical tone.','Put the daily reading on the home screen, with the birth chart one tap away.','Kept typography large and calm so long readings stay comfortable.'],
+     deliver:['Onboarding','Daily reading','Birth chart','Profile and settings','Visual style guide']},
+    {id:'linkedin-app-redesign',art:'network',f:'product',cat:'Product UI/UX',title:'LinkedIn App Redesign',
+     blurb:'Streamlining professional networking with a cleaner, more modern interface.',
+     type:'Concept redesign',tools:'Figma',role:'UI/UX Designer',brand:true,
+     overview:'A redesign concept for a professional networking app, aimed at a cleaner feed, profile and messaging experience.',
+     challenge:'Feeds fill up with mixed content, and the actions that matter, like connecting and messaging, get buried.',
+     approach:['Simplified the feed so posts, jobs and updates are easy to tell apart.','Redesigned profile pages to put the most useful details first.','Made connecting and messaging one clear action from any screen.'],
+     deliver:['Feed','Profile','Messaging','Navigation','Component library']},
+    {id:'creative-ui-ux-portfolio',art:'folio',f:'web',cat:'Website Design',title:'Creative UI/UX Portfolio',
+     blurb:'A bold and interactive portfolio website designed to stand out.',
+     type:'Website design',tools:'Figma, Framer',role:'UI/UX Designer',
+     overview:'A portfolio website concept with a confident typographic voice, built to show design work first and explain it second.',
+     challenge:'Most design portfolios look alike. This one needed a clear point of view while keeping the projects easy to browse.',
+     approach:['Led with oversized type and a single strong accent colour.','Built a project grid that previews the work before any click.','Added restrained motion so the page feels alive without slowing it down.'],
+     deliver:['Homepage','Project grid','Case study template','Contact page','Responsive layouts']}
+  ];
+
+  /* ---------- render ---------- */
+  var $=function(s){return document.querySelector(s);};
+  document.getElementById('heroShot').innerHTML=ART.hr('10 24 380 262');
+  var grid=$('#grid');
+  grid.innerHTML=P.map(function(p){
+    return '<a class="card" href="#project-'+p.id+'" data-f="'+p.f+'"><div class="thumb">'+ART[p.art]()+'</div><div class="body"><span class="eyebrow">'+p.cat+'</span><h3>'+p.title+'</h3><p>'+p.blurb+'</p><span class="go">View Case Study <span aria-hidden="true">&rarr;</span></span></div></a>';
+  }).join('');
+
+  $('#filters').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    var f=b.getAttribute('data-f');
+    document.querySelectorAll('#filters button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+    grid.querySelectorAll('.card').forEach(function(c){c.hidden=!(f==='all'||c.getAttribute('data-f')===f);});
+  });
+
+  /* ---------- case study panel ---------- */
+  var panel=$('#case'),inner=$('#caseIn');
+  function openCase(id){
+    var i=P.findIndex(function(p){return p.id===id;});
+    if(i<0){closeCase();return;}
+    var p=P[i],prev=P[(i+P.length-1)%P.length],next=P[(i+1)%P.length];
+    inner.innerHTML=
+      '<div class="case-top"><a class="btn btn-ghost" href="#projects" id="caseBack">&larr; All projects</a><a class="btn btn-dark" href="#contact">Hire Me</a></div>'+
+      '<p class="eyebrow">'+p.cat+'</p><h1 id="caseTitle">'+p.title+'</h1><p class="lead">'+p.overview+'</p>'+
+      '<div class="cover">'+ART[p.art]()+'</div>'+
+      '<dl class="meta"><div><dt>Role</dt><dd>'+p.role+'</dd></div><div><dt>Type</dt><dd>'+p.type+'</dd></div><div><dt>Tools</dt><dd>'+p.tools+'</dd></div></dl>'+
+      '<div class="blocks">'+
+        '<div><h2>The challenge</h2><p>'+p.challenge+'</p></div>'+
+        '<div><h2>My approach</h2><ul>'+p.approach.map(function(a){return '<li>'+a+'</li>';}).join('')+'</ul></div>'+
+        '<div><h2>Deliverables</h2><div class="chips">'+p.deliver.map(function(d){return '<span class="chip">'+d+'</span>';}).join('')+'</div></div>'+
+      '</div>'+
+      (p.brand?'<p class="note">'+BRAND+'</p>':'')+
+      '<div class="pager"><a class="btn btn-ghost" href="#project-'+prev.id+'">&larr; '+prev.title+'</a><a class="btn btn-ghost" href="#project-'+next.id+'">'+next.title+' &rarr;</a></div>';
+    panel.hidden=false;panel.scrollTop=0;
+    document.documentElement.style.overflow='hidden';
+    document.title=p.title+' | Raghuraman Portfolio';
+    var back=document.getElementById('caseBack');if(back)back.focus({preventScroll:true});
+  }
+  function closeCase(){
+    if(panel.hidden)return;
+    panel.hidden=true;inner.innerHTML='';
+    document.documentElement.style.overflow='';
+    document.title='Raghuraman Portfolio';
+  }
+  function route(){
+    var h=location.hash;
+    if(h.indexOf('#project-')===0)openCase(h.slice(9));else closeCase();
+  }
+  window.addEventListener('hashchange',route);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&!panel.hidden){location.hash='projects';}
+  });
+  route();
+
+  /* ---------- mobile menu ---------- */
+  var mb=$('#menuBtn'),links=$('#links');
+  mb.addEventListener('click',function(){var o=links.classList.toggle('open');mb.setAttribute('aria-expanded',o?'true':'false');});
+  links.addEventListener('click',function(e){if(e.target.closest('a')){links.classList.remove('open');mb.setAttribute('aria-expanded','false');}});
+
+  /* ---------- copy helpers and contact form ---------- */
+  function copy(text,btn,done){
+    var label=btn.textContent;
+    function ok(){btn.textContent=done;setTimeout(function(){btn.textContent=label;},1800);}
+    try{
+      navigator.clipboard.writeText(text).then(ok,function(){fallback();});
+    }catch(err){fallback();}
+    function fallback(){
+      var sel=window.getSelection(),r=document.createRange(),t=btn.__target;
+      if(t){t.focus();t.select&&t.select();}
+      else if(sel){var n=document.getElementById('mailText');r.selectNodeContents(n);sel.removeAllRanges();sel.addRange(r);}
+      btn.textContent='Press Ctrl/Cmd+C';setTimeout(function(){btn.textContent=label;},2400);
+    }
+  }
+  $('#copyMail').addEventListener('click',function(){copy('hello@raghuraman.com',this,'Copied');});
+  var copyMsg=$('#copyMsg');copyMsg.__target=$('#readyText');
+  copyMsg.addEventListener('click',function(){copy($('#readyText').value,this,'Copied');});
+
+  $('#form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var n=$('#f-name').value.trim(),m=$('#f-email').value.trim(),msg=$('#f-msg').value.trim(),err=$('#err');
+    if(!n||!/^\S+@\S+\.\S+$/.test(m)||!msg){
+      err.textContent='Please add your name, a valid email and a short message.';
+      return;
+    }
+    err.textContent='';
+    var text='Hi Raghuraman,\n\nI would like to talk about a project.\n\nName: '+n+'\nEmail: '+m+'\nProject type: '+$('#f-type').value+'\nBudget: '+$('#f-budget').value+'\n\n'+msg;
+    $('#readyText').value=text;
+    $('#ready').hidden=false;
+    $('#ready').scrollIntoView({block:'nearest',behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
